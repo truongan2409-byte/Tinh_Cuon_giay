@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b5ed7" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Tính Cuộn Giấy" />
+  <title>Máy Tính Giấy</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="header">
+      <div class="header-text">
+        <h1>QUY ĐỔI &amp; ĐƯỜNG KÍNH</h1>
+        <span class="subtitle">Lõi cố định Ø 100 mm</span>
+      </div>
+      <div class="header-right">
+        <span id="lblStatus" class="status-pill">Online</span>
+        <button type="button" id="btnHistory" class="history-btn">Lịch sử (0)</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- Result Banner -->
+      <section id="resultBox" class="result-box idle" aria-live="polite">
+        <div id="lblKetQua" class="result-text">Vui lòng nhập dữ liệu để tính toán</div>
+      </section>
+
+      <!-- Input Card -->
+      <section class="card form-card">
+        <div class="field-grid">
+          <div class="field">
+            <label for="inpKho">Khổ giấy (mm)</label>
+            <input id="inpKho" type="text" inputmode="decimal" placeholder="VD: 1550" autocomplete="off" />
+          </div>
+
+          <div class="field">
+            <label for="inpDinhLuong">Định lượng (g/m²)</label>
+            <input id="inpDinhLuong" type="text" inputmode="decimal" placeholder="VD: 170" autocomplete="off" />
+          </div>
+
+          <div class="field">
+            <label for="inpWeight">Trọng lượng (kg)</label>
+            <input id="inpWeight" type="text" inputmode="decimal" placeholder="VD: 1600" autocomplete="off" />
+          </div>
+
+          <div class="field">
+            <label for="inpMet">Số mét (m)</label>
+            <input id="inpMet" type="text" inputmode="decimal" placeholder="Nhập hoặc tự tính" autocomplete="off" />
+          </div>
+
+          <div class="field">
+            <label for="selLoaiGiay">Loại Giấy</label>
+            <select id="selLoaiGiay">
+              <option value="GIẤY XEO">GIẤY XEO</option>
+              <option value="GIẤY MÀU">GIẤY MÀU</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="inpHsdk">HSĐK (tự nội suy)</label>
+            <input id="inpHsdk" type="text" inputmode="decimal" placeholder="1.10 - 1.45" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="dk-box">
+          <span class="dk-label">Đường kính cuộn (cm):</span>
+          <input id="inpDk" type="text" class="dk-input" readonly placeholder="--" />
+        </div>
+      </section>
+
+      <!-- Action Buttons -->
+      <section class="actions">
+        <button type="button" id="btnTinhMet" class="btn btn-primary">TÍNH SỐ MÉT</button>
+        <button type="button" id="btnTinhKg" class="btn btn-success">TÍNH TRỌNG LƯỢNG</button>
+      </section>
+
+      <button type="button" id="btnReset" class="btn btn-reset">XÓA TOÀN BỘ (RESET)</button>
+    </main>
+  </div>
+
+  <!-- History Modal -->
+  <div id="historyModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h2 id="historyTitle">Lịch sử tính toán</h2>
+        <div class="modal-actions">
+          <button type="button" id="btnCopyHistory" class="icon-action">Sao chép</button>
+          <button type="button" id="btnClearHistory" class="icon-action danger">Xóa hết</button>
+          <button type="button" id="btnCloseHistory" class="icon-action close">Đóng</button>
+        </div>
+      </div>
+      <div id="historyList" class="history-list"></div>
+    </div>
+  </div>
+
+  <!-- Toast / Alert -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
