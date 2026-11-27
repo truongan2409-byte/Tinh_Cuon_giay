@@ -17,7 +17,7 @@
       const gGoc = 170;
       const hsdkGoc = 1.208;
       const heSoDoc = (1.298 - 1.326) / (185 - 125);
-      hsdkTuDong = hsdkGoc + (dinhLuong - gGoc) * heSoDoc;
+      hsdkTuDong = (hsdkGoc + (dinhLuong - gGoc) * heSoDoc) * 1.008;
     }
 
     if (hsdkTuDong > 1.45) hsdkTuDong = 1.45;
