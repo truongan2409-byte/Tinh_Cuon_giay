@@ -70,8 +70,8 @@
         </div>
 
         <div class="dk-box">
-          <span class="dk-label">Đường kính cuộn (cm):</span>
-          <input id="inpDk" type="text" class="dk-input" readonly placeholder="--" />
+          <label for="inpDk" class="dk-label">Đường kính cuộn (cm):</label>
+          <input id="inpDk" type="text" inputmode="decimal" class="dk-input" placeholder="Nhập Ø hoặc tự tính" autocomplete="off" />
         </div>
       </section>
 
@@ -81,6 +81,7 @@
         <button type="button" id="btnTinhKg" class="btn btn-success">TÍNH TRỌNG LƯỢNG</button>
       </section>
 
+      <button type="button" id="btnTinhTuDk" class="btn btn-dk">TÍNH TRỌNG LƯỢNG TỪ ĐƯỜNG KÍNH (Ø)</button>
       <button type="button" id="btnReset" class="btn btn-reset">XÓA TOÀN BỘ (RESET)</button>
     </main>
   </div>

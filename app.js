@@ -36,6 +36,16 @@
     return Math.sqrt(dBinhPhuong) * 100;
   }
 
+  function tinhSoMetTuDuongKinh(duongKinhCm, dinhLuong, hsdk) {
+    const doDayMm = (dinhLuong * hsdk) / 1000;
+    const doDayM = doDayMm / 1000;
+    const dLoiM = D_LOI / 1000;
+    const dCuonM = duongKinhCm / 100;
+    if (doDayM <= 0 || dCuonM <= dLoiM) return 0;
+
+    return ((dCuonM * dCuonM - dLoiM * dLoiM) * Math.PI) / (4 * doDayM);
+  }
+
   function parseNumber(raw) {
     const cleaned = String(raw ?? "").trim().replace(/,/g, ".");
     if (!cleaned) return Number.NaN;
@@ -110,6 +120,7 @@
 
     btnTinhMet: document.getElementById("btnTinhMet"),
     btnTinhKg: document.getElementById("btnTinhKg"),
+    btnTinhTuDk: document.getElementById("btnTinhTuDk"),
     btnReset: document.getElementById("btnReset"),
 
     resultBox: document.getElementById("resultBox"),
@@ -253,6 +264,54 @@
     });
   }
 
+  function tinhTuDuongKinh() {
+    const khoGiay = parseNumber(el.inpKho.value);
+    const dinhLuong = parseNumber(el.inpDinhLuong.value);
+    const duongKinhCm = parseNumber(el.inpDk.value);
+    const hsdk = parseNumber(el.inpHsdk.value);
+
+    if (
+      Number.isNaN(khoGiay) ||
+      Number.isNaN(dinhLuong) ||
+      Number.isNaN(duongKinhCm) ||
+      Number.isNaN(hsdk)
+    ) {
+      setResult("Vui lòng nhập đúng định dạng số!", "error");
+      showToast("Vui lòng nhập đúng định dạng số!", "#b91c1c");
+      return;
+    }
+
+    if (khoGiay <= 0 || dinhLuong <= 0 || duongKinhCm <= 0 || hsdk <= 0) {
+      setResult("Các giá trị phải lớn hơn 0!", "error");
+      showToast("Các giá trị phải lớn hơn 0!", "#b91c1c");
+      return;
+    }
+
+    const dLoiCm = D_LOI / 10;
+    if (duongKinhCm <= dLoiCm) {
+      const msg = `Đường kính cuộn phải lớn hơn lõi (${dLoiCm} cm)!`;
+      setResult(msg, "error");
+      showToast(msg, "#b91c1c");
+      return;
+    }
+
+    const soMet = tinhSoMetTuDuongKinh(duongKinhCm, dinhLuong, hsdk);
+    const trongLuong = (dinhLuong * khoGiay * soMet) / 1000000;
+
+    el.inpMet.value = soMet.toFixed(2);
+    el.inpWeight.value = trongLuong.toFixed(2);
+
+    const summary = `W = ${formatNumber(trongLuong, 1)} kg | L = ${formatNumber(soMet, 1)} m`;
+    setResult(`Kết quả: ${summary}`, "dk");
+    syncInputsToState();
+
+    addHistory({
+      summary,
+      meta: `${el.selLoaiGiay.value} • Khổ ${khoGiay}mm • ĐL ${dinhLuong} • Ø ${duongKinhCm}cm • HSĐK ${hsdk}`,
+      createdAt: formatNow(),
+    });
+  }
+
   function resetDuLieu() {
     el.inpKho.value = "";
     el.inpDinhLuong.value = "";
@@ -329,12 +388,13 @@
   // Bind input events
   el.inpDinhLuong.addEventListener("input", capNhatHsdkTuDong);
   el.selLoaiGiay.addEventListener("change", capNhatHsdkTuDong);
-  [el.inpKho, el.inpWeight, el.inpMet, el.inpHsdk].forEach((input) => {
+  [el.inpKho, el.inpWeight, el.inpMet, el.inpHsdk, el.inpDk].forEach((input) => {
     input.addEventListener("input", syncInputsToState);
   });
 
   el.btnTinhMet.addEventListener("click", tinhSoMet);
   el.btnTinhKg.addEventListener("click", tinhTrongLuong);
+  el.btnTinhTuDk.addEventListener("click", tinhTuDuongKinh);
   el.btnReset.addEventListener("click", resetDuLieu);
 
   el.btnHistory.addEventListener("click", () => {
